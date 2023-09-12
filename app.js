@@ -3,7 +3,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const date = require(__dirname + "/date.js");
 
 const app = express();
 
@@ -22,10 +21,20 @@ const itemsSchema = {
 
 const Item = mongoose.model("Item", itemsSchema);
 
-app.get("/", function (req, res) {
-  const day = date.getDate();
+const item1 = new Item({
+  name: "Welcome to your Todoist!",
+});
+const item2 = new Item({
+  name: "Hit the + button to add a new list ",
+});
+const item3 = new Item({
+  name: "<--- hit this to delete an item.",
+});
 
-  res.render("list", { listTitle: day, newListItems: items });
+const defaultItem = [item1, item2, item3];
+
+app.get("/", function (req, res) {
+  res.render("list", { listTitle: "Today", newListItems: items });
 });
 
 app.post("/", function (req, res) {
