@@ -1,5 +1,3 @@
-//jshint esversion:6
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -11,8 +9,8 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/27017/todolistDB", {
-  userNewUrlParser: true,
+mongoose.connect("mongodb://localhost:27017/mytodolistDB", {
+  useNewUrlParser: true,
 });
 
 const itemsSchema = {
@@ -33,8 +31,23 @@ const item3 = new Item({
 
 const defaultItem = [item1, item2, item3];
 
+// Item.insertMany(defaultItem)
+//   .then(() => {
+//     console.log("Successfully saved all items to the database");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
 app.get("/", function (req, res) {
-  res.render("list", { listTitle: "Today", newListItems: items });
+  Item.find({})
+    .then(() => {
+      //or if you need to login all
+      res.render("list", { listTitle: "Today", newListItems: defaultItem });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/", function (req, res) {
